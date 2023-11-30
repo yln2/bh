@@ -6,8 +6,7 @@
 <script>
 let BITS_PER_CHAR=15,BITS_PER_BYTE=8,pairStrings=["ҠҿԀԟڀڿݠޟ߀ߟကဟႠႿᄀᅟᆀᆟᇠሿበቿዠዿጠጿᎠᏟᐠᙟᚠᛟកសᠠᡟᣀᣟᦀᦟ᧠᧿ᨠᨿᯀᯟᰀᰟᴀᴟ⇠⇿⋀⋟⍀⏟␀␟─❟➀➿⠀⥿⦠⦿⨠⩟⪀⪿⫠⭟ⰀⰟⲀⳟⴀⴟⵀⵟ⺠⻟㇀㇟㐀䶟䷀龿ꀀꑿ꒠꒿ꔀꗿꙀꙟꚠꛟ꜀ꝟꞀꞟꡀꡟ","ƀƟɀʟ"],lookupE={},lookupD={};pairStrings.forEach((o,e)=>{let t=[];o.match(/../gu).forEach(o=>{let e=o.codePointAt(0),r=o.codePointAt(1);for(let l=e;l<=r;l++)t.push(String.fromCodePoint(l))});let r=15-8*e;lookupE[r]=t,t.forEach((o,e)=>{lookupD[o]=[r,e]})});let encode=o=>{let e=o.length,t="",r=0,l=0;for(let n=0;n<e;n++){let f=o[n];for(let i=7;i>=0;i--){let c=f>>i&1;r=(r<<1)+c,15==++l&&(t+=lookupE[l][r],r=0,l=0)}}if(0!==l){for(;!(l in lookupE);)r=(r<<1)+1,l++;t+=lookupE[l][r]}return t},decode=o=>{let e=o.length,t=new Uint8Array(Math.floor(15*e/8)),r=0,l=0,n=0;for(let f=0;f<e;f++){let i=o.charAt(f);if(!(i in lookupD))throw Error(`Unrecognised Base32768 character: ${i}`);let[c,a]=lookupD[i];if(15!==c&&f!==e-1)throw Error("Secondary character found before end of input at position "+String(f));for(let u=c-1;u>=0;u--){let $=a>>u&1;l=(l<<1)+$,8==++n&&(t[r]=l,r++,l=0,n=0)}}if(l!==(1<<n)-1)throw Error("Padding mismatch");return new Uint8Array(t.buffer,0,r)};
 function ge(a){return document.getElementById(a)}
-ge(0).style.display="none";ge(1).style.display="none";
 function es(a,b){ge(b).value=encode(new TextEncoder().encode(ge(a).value))}
 function ds(a,b){ge(b).value=new TextDecoder().decode(decode(ge(a).value))}
-function cc(a){if(ge(a).value=="`"){ge(a).value="";ge(0).style.display="";ge(1).style.display="";}if(ge(a).value==1){ge(a).value="";ge(0).value="";ge(1).value=""}if(ge(a).value.length>1){ge(a).value=""}}
+function cc(a){if(ge(a).value==1){ge(a).value="";ge(0).value="";ge(1).value=""}if(ge(a).value.length>1){ge(a).value=""}}
 </script>
